@@ -41,7 +41,6 @@ class BaseRouter
      */
     public function getRouter()
     {
-        var_dump($this->routers);
         return $this->router;
     }
 
