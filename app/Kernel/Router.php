@@ -7,11 +7,28 @@
 
 namespace App\Kernel;
 
+use Kite\Http\Website\BaseRouter;
 
-class Router
+/**
+ * 路由类，路由设置在当前类中
+ * Class Router
+ * @package App\Kernel
+ */
+class Router extends BaseRouter
 {
-    public function __construct()
+    public function __construct($config)
     {
-        echo '路由的初始化!';
+        parent::__construct($this->routers(), $config);
+    }
+
+    /**
+     * @return Array 自定义的路由
+     */
+    public function routers()
+    {
+        $routers = [
+            ['path' => '/news', 'action' => 'new', 'method' => 'GET'],
+        ];
+        return $routers;
     }
 }

@@ -17,7 +17,9 @@ class App
      */
     public static function run()
     {
-        $route = new Router();
+        $config = require __DIR__ . '/../Config/dev.php';
+        $route = new Router($config);
+        $route->getRouter();
     }
 
     /**
