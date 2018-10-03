@@ -48,6 +48,10 @@ class BaseRouter
     {
         if (isset($_SERVER['REQUEST_URI']) && $_SERVER['REQUEST_URI'] != '/') {
             $path = $this->analyseRouter($_SERVER['REQUEST_URI']);
+            // 存储POST数据的值
+            if($_SERVER['REQUEST_METHOD'] === 'POST') {
+                $this->params = $_POST;
+            }
             foreach ($this->routers as $item) {
                 if ($item['path'] == $path && $item['method'] == $_SERVER['REQUEST_METHOD']) {
                     $this->router['action'] = $item['action'];
@@ -79,17 +83,17 @@ class BaseRouter
             $router = '/' . $routerArr[0];
             for ($i = 1; $i < $routerNum; $i = $i + 2) {
                 $this->params[$routerArr[$i]] = $routerArr[$i + 1];
-                $router .= '/:'.$routerArr[$i];
+                $router .= '/:' . $routerArr[$i];
             }
         } else {
-            if(isset($routerArr[1])) {
+            if (isset($routerArr[1])) {
                 $router = '/' . $routerArr[0] . '/' . $routerArr[1];
             } else {
-                $router = '/'.$routerArr[0];
+                $router = '/' . $routerArr[0];
             }
-            for($i = 2; $i < $routerNum; $i = $i +2) {
+            for ($i = 2; $i < $routerNum; $i = $i + 2) {
                 $this->params[$routerArr[$i]] = $routerArr[$i + 1];
-                $router .= '/:'.$routerArr[$i];
+                $router .= '/:' . $routerArr[$i];
             }
         }
         return $router;

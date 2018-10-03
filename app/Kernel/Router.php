@@ -34,7 +34,7 @@ class Router extends BaseRouter
             ['path' => '/news', 'action' => 'Index', 'method' => 'GET'],
             ['path' => '/news/user', 'action' => 'new', 'method' => 'GET'],
             ['path' => '/news/:id', 'action' => 'new', 'method' => 'GET'],
-            ['path' => '/news/user/:username/:password', 'action' => 'new\user', 'method' => 'GET'],
+            ['path' => '/news/user/:username/:password', 'action' => 'Index', 'method' => 'GET'],
         ];
         return $routers;
     }

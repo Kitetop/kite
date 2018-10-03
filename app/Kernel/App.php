@@ -7,7 +7,7 @@
 
 namespace App\Kernel;
 
-use App\Action\Action;
+use Kite\Action\Action;
 
 class App
 {
@@ -23,15 +23,14 @@ class App
         $config = require __DIR__ . '/../Config/dev.php';
         try {
             $route = new Router($config);
-            $action = new Action();
-            $action->actionMessage = $route->getRouter();
-            $action->params = $route->getParams();
-            $path = APP.'/Action/'.$action->actionMessage['action'].'.php';
-            if(is_file(str_replace('\\','/',$path))) {
+            $actionMessage = $route->getRouter();
+            $params = $route->getParams();
+            $path = APP . '/Action/' . $actionMessage['action'] . '.php';
+            if (is_file(str_replace('\\', '/', $path))) {
                 require_once $path;
-                $class = 'App\\Action\\'.$action->actionMessage['action'];
-                $action = new $class();
-                $action->execute();
+                $class = 'App\\Action\\' . $actionMessage['action'];
+                $action = new $class($actionMessage, $params);
+                $action->execute($actionMessage['method']);
             } else {
                 throw new \Exception('This action not exit');
             }

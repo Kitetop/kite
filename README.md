@@ -24,3 +24,10 @@ tip：此框架的自定义路由前两字段指向目录结构，后面的代�
      /users/news/username/kitetop/password/1363215999@qq.com => 其中username=kitetop,password=1363215999@qq.com
 
 ````
+> Action 层级原理
+
+````
+1. 最顶层在 /kite/Action/Action中，其他的自定义的action都是继承此action，在此action中定义了doPost、
+   doGet、doDelete等方法（与HTTP请求中的方法一致），在自定义的路由的时候只要对设定的请求的方法在对应的
+   action子类重写方法即可。
+````
