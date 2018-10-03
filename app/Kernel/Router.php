@@ -16,6 +16,10 @@ use Kite\Http\Website\BaseRouter;
  */
 class Router extends BaseRouter
 {
+    /**
+     * Router constructor.
+     * @param $config [框架的配置信息]
+     */
     public function __construct($config)
     {
         parent::__construct($this->routers(), $config);
@@ -28,6 +32,8 @@ class Router extends BaseRouter
     {
         $routers = [
             ['path' => '/news', 'action' => 'new', 'method' => 'GET'],
+            ['path' => '/news/:id', 'action' => 'new', 'method' => 'GET'],
+            ['path' => '/news/user/:username/:password', 'action' => 'new\user', 'method' => 'GET'],
         ];
         return $routers;
     }

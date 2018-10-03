@@ -20,5 +20,5 @@
     # RewriteRule ^ index.php [L]
 
     RewriteCond %{REQUEST_FILENAME} !-f
-    #0RewriteRule ^(.*)$ /public/index.php/$1 [QSA,PT,L]
+    # RewriteRule ^(.*)$ /public/index.php/$1 [QSA,PT,L]
 </IfModule>

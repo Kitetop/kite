@@ -18,8 +18,13 @@ class App
     public static function run()
     {
         $config = require __DIR__ . '/../Config/dev.php';
-        $route = new Router($config);
-        $route->getRouter();
+        try {
+            $route = new Router($config);
+            var_dump($route->getRouter());
+            var_dump($route->getParams());
+        }catch (\Exception $e) {
+            echo $e->getMessage();
+        }
     }
 
     /**
