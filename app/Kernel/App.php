@@ -7,10 +7,13 @@
 
 namespace App\Kernel;
 
+use App\Action\Action;
+
 class App
 {
     //确定此类是否已经被引入进来了
     public static $classMap = [];
+
     /**
      * 框架的启动函数
      * @return string
@@ -20,9 +23,19 @@ class App
         $config = require __DIR__ . '/../Config/dev.php';
         try {
             $route = new Router($config);
-            var_dump($route->getRouter());
-            var_dump($route->getParams());
-        }catch (\Exception $e) {
+            $action = new Action();
+            $action->actionMessage = $route->getRouter();
+            $action->params = $route->getParams();
+            $path = APP.'/Action/'.$action->actionMessage['action'].'.php';
+            if(is_file(str_replace('\\','/',$path))) {
+                require_once $path;
+                $class = 'App\\Action\\'.$action->actionMessage['action'];
+                $action = new $class();
+                $action->execute();
+            } else {
+                throw new \Exception('This action not exit');
+            }
+        } catch (\Exception $e) {
             echo $e->getMessage();
         }
     }
@@ -36,11 +49,11 @@ class App
     {
         $class = format($class);
         // 避免重复引入
-        if(isset($classMap[$class])) {
+        if (isset($classMap[$class])) {
             return true;
         }
-        $filePath =APP.'/'.$class.'.php';
-        if(is_file($filePath)) {
+        $filePath = ROOT . '/' . $class . '.php';
+        if (is_file($filePath)) {
             require_once $filePath;
             self::$classMap[$class] = $class;
         } else {

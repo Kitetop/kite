@@ -82,7 +82,11 @@ class BaseRouter
                 $router .= '/:'.$routerArr[$i];
             }
         } else {
-            $router = '/'.$routerArr[0].'/'.$routerArr[1];
+            if(isset($routerArr[1])) {
+                $router = '/' . $routerArr[0] . '/' . $routerArr[1];
+            } else {
+                $router = '/'.$routerArr[0];
+            }
             for($i = 2; $i < $routerNum; $i = $i +2) {
                 $this->params[$routerArr[$i]] = $routerArr[$i + 1];
                 $router .= '/:'.$routerArr[$i];

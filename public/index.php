@@ -13,7 +13,8 @@ define('ROOT_PATH', str_replace('\\', '/', __DIR__));
 // 核心的函数库文件
 define('KERNEL', ROOT_PATH . '/../app/Kernel');
 //控制器等所处目录
-define('APP', ROOT_PATH . '/..');
+define('APP',ROOT_PATH.'/../app');
+define('ROOT', ROOT_PATH . '/..');
 // 调试模式
 define('DEBUG', true);
 if (DEBUG) {
@@ -22,7 +23,7 @@ if (DEBUG) {
     ini_set('display_errors', 'Off');
 }
 //加载公用的函数库
-require_once APP . '/kite/Commons/format.php';
+require_once ROOT . '/kite/Commons/format.php';
 // 加载框架的核心的文件、启动框架
 require_once KERNEL . '/App.php';
 //类的自动加载
