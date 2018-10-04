@@ -13,15 +13,20 @@ namespace Kite\Action;
  * @package Kite\Action
  * @param $method [请求的方法类型]
  */
-class Action
+abstract class Action
 {
     protected $params = [];
     protected $actionMessage = [];
+    /**
+     * @var array [全局的配置信息]
+     */
+    protected $config = [];
 
-    public function __construct($actionMessage,$params)
+    public function __construct($actionMessage, $params, $config)
     {
         $this->actionMessage = $actionMessage;
         $this->params = $params;
+        $this->config = $config;
     }
 
     public function execute($method)
@@ -30,20 +35,37 @@ class Action
         $this->$func();
     }
 
+    /**
+     * 返回对应的Service对象
+     * @return Service
+     * @throws [调用的服务是否存在]
+     */
+
+    public function Service(string $name)
+    {
+        $path = APP . '/Service/' . $name . '.php';
+        if (is_file(str_replace('\\', '/', $path))) {
+            require_once $path;
+            $class = 'App\\Service\\'.$name;
+            return new $class($this->config);
+        } else {
+            throw new \Exception('This Service is Invalid');
+        }
+    }
+
     protected function doGet()
     {
-
     }
+
     protected function doPost()
     {
-
     }
+
     protected function doDelete()
     {
-
     }
+
     protected function doPatch()
     {
-
     }
 }

@@ -8,14 +8,57 @@
 namespace Kite\Service;
 
 
-class Service
+abstract class Service
 {
+    public $params = [];
     /**
-     * 调用服务
-     * @return $this
+     * @var array [全局的配置信息]
      */
-    public function Service()
+    protected $config = [];
+
+    public function __construct($config)
     {
-        return $this;
+        $this->config = $config;
     }
+
+    public function run()
+    {
+        $this->execute();
+    }
+
+    /**
+     * 在服务内部调用其他服务
+     * @param String $name
+     * @param array $params
+     * @throws
+     * @return Service
+     */
+    public function call(string $name, array $params)
+    {
+        $path = APP . '/Service/' . $name . '.php';
+        if (is_file(str_replace('\\', '/', $path))) {
+            require_once $path;
+            $class = 'App\\Service\\' . $name;
+            $service = new $class($this->config);
+            $service->params = $params;
+            return $service->execute();
+        } else {
+            throw new \Exception('This Service is Invalid');
+        }
+    }
+
+    public function __set($name, $value)
+    {
+        $this->params[$name] = $value;
+    }
+
+    public function __get($name)
+    {
+        return $this->params[$name];
+    }
+
+    /**
+     * @return mixed [抽象的方法，需要子类进行重写]
+     */
+    abstract protected function execute();
 }

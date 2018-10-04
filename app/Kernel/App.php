@@ -29,7 +29,7 @@ class App
             if (is_file(str_replace('\\', '/', $path))) {
                 require_once $path;
                 $class = 'App\\Action\\' . $actionMessage['action'];
-                $action = new $class($actionMessage, $params);
+                $action = new $class($actionMessage, $params, $config);
                 $action->execute($actionMessage['method']);
             } else {
                 throw new \Exception('This action not exit');

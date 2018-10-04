@@ -17,6 +17,9 @@ class Index extends Action
 {
     protected function doGet()
     {
-        echo 'This is Index doGet function...';
+        $service =  $this->Service('Index');
+        $service->name = 'Kitetop';
+        $service->password = 'mumu';
+        $service->run();
     }
 }
