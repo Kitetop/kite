@@ -8,6 +8,7 @@
 namespace App\Kernel;
 
 use Kite\Action\Action;
+use Kite\Http\Request;
 
 class App
 {
@@ -25,6 +26,7 @@ class App
             $route = new Router($config);
             $actionMessage = $route->getRouter();
             $params = $route->getParams();
+            $request = new Request();
             $path = APP . '/Action/' . $actionMessage['action'] . '.php';
             if (is_file(str_replace('\\', '/', $path))) {
                 require_once $path;

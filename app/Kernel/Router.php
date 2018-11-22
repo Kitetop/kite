@@ -7,7 +7,7 @@
 
 namespace App\Kernel;
 
-use Kite\Http\Website\BaseRouter;
+use Kite\Http\BaseRouter;
 
 /**
  * 路由类，路由设置在当前类中

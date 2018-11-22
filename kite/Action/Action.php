@@ -53,6 +53,23 @@ abstract class Action
         }
     }
 
+    /*
+ * 表单验证,默认对输入内容验证
+ *
+ * @param array $rule 验证规则
+ * @return array
+ */
+    protected function validate(array $rules)
+    {
+        $data = $this->request->only(array_keys($rules));
+        $validator = new Validator($rules, $data);
+        if (false === $validator->make()) {
+            throw new \Exception($validator->lastError(), 400);
+        }
+
+        $this->props = $this->validatedData = $validator->validatedData();
+    }
+
     protected function doGet()
     {
     }
