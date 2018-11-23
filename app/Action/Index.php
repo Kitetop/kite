@@ -15,11 +15,22 @@ use Kite\Action\Action;
  */
 class Index extends Action
 {
+    protected $getRules = [
+        'name' => [
+            'desc' => '分页页码',
+            'message' => 'id不能为空',
+            'rules' => ['required'],
+        ],
+        'username' => [
+            'desc' => '用户名',
+            'message' => '用户名不能为空',
+            'rules' => ['required']
+        ]
+    ];
     protected function doGet()
     {
-        $service =  $this->Service('Index');
-        $service->name = 'Kitetop';
-        $service->password = 'mumu';
-        $service->run();
+        $this->validate($this->getRules);
+        $this->code(201);
+        $this->response($this->params);
     }
 }

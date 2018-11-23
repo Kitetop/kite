@@ -7,8 +7,10 @@
 
 namespace App\Kernel;
 
-use Kite\Action\Action;
-use Kite\Http\Request;
+use Kite\Cycle;
+use Kite\Http\Phase\InitPhase;
+use Kite\Http\Phase\ReturnPhase;
+use Kite\Http\Phase\RouterPhase;
 
 class App
 {
@@ -21,24 +23,11 @@ class App
      */
     public static function run()
     {
-        $config = require __DIR__ . '/../Config/dev.php';
-        try {
-            $route = new Router($config);
-            $actionMessage = $route->getRouter();
-            $params = $route->getParams();
-            $request = new Request();
-            $path = APP . '/Action/' . $actionMessage['action'] . '.php';
-            if (is_file(str_replace('\\', '/', $path))) {
-                require_once $path;
-                $class = 'App\\Action\\' . $actionMessage['action'];
-                $action = new $class($actionMessage, $params, $config);
-                $action->execute($actionMessage['method']);
-            } else {
-                throw new \Exception('This action not exit');
-            }
-        } catch (\Exception $e) {
-            echo $e->getMessage();
-        }
+        $cycle = new Cycle();
+        $cycle->registerPhase(new InitPhase());
+        $cycle->registerPhase(new RouterPhase());
+        $cycle->registerPhase(new ReturnPhase());
+        $cycle->run();
     }
 
     /**

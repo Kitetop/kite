@@ -7,6 +7,9 @@
 
 namespace Kite\Action;
 
+use Kite\Cycle;
+use Kite\Http\Validator;
+
 /**
  * 处理Action的基础类
  * Class BaseAction
@@ -15,18 +18,16 @@ namespace Kite\Action;
  */
 abstract class Action
 {
+    protected $cycle;
+    protected $request;
+    protected $response;
     protected $params = [];
-    protected $actionMessage = [];
-    /**
-     * @var array [全局的配置信息]
-     */
-    protected $config = [];
 
-    public function __construct($actionMessage, $params, $config)
+    public function __construct(Cycle $cycle)
     {
-        $this->actionMessage = $actionMessage;
-        $this->params = $params;
-        $this->config = $config;
+        $this->cycle = $cycle;
+        $this->request = $cycle->getRequest();
+        $this->response = $cycle->getResponse();
     }
 
     public function execute($method)
@@ -49,7 +50,7 @@ abstract class Action
             $class = 'App\\Service\\'.$name;
             return new $class($this->config);
         } else {
-            throw new \Exception('This Service is Invalid');
+            throw new \Exception('This Service is Invalid',500);
         }
     }
 
@@ -66,8 +67,63 @@ abstract class Action
         if (false === $validator->make()) {
             throw new \Exception($validator->lastError(), 400);
         }
+        $this->params = $validator->validatedData();
+    }
 
-        $this->props = $this->validatedData = $validator->validatedData();
+    /**
+     * 设置输出内容
+     *
+     * @final
+     * @param string $key
+     * @param mixed $val
+     * @param boolean $hidden
+     * @return null
+     */
+    final protected function response($key, $val = null, $hidden = false)
+    {
+        $paramsNum = func_num_args();
+        if ($paramsNum == 1) {
+            $this->response->setData($key, $val, $hidden);
+        } else {
+            $this->response->addDataWithKey($key, $val, $hidden);
+        }
+    }
+
+    /**
+     * 异常输出
+     *
+     * @param int $code
+     * @param string $message
+     * @return void
+     */
+    protected function fault($code, $message)
+    {
+        $this->code($code);
+        $this->response(['message' => $message]);
+        $this->interrupt = true;
+    }
+
+    /**
+     * 设置http返回码
+     *
+     * @param code $code
+     * @return mixed
+     */
+    protected function code($code)
+    {
+        $this->response->setCode($code);
+        return $this;
+    }
+
+    /**
+     * format 指定输出格式
+     *
+     * @param string $format
+     * @return null
+     */
+    protected function format($format)
+    {
+        $this->response->setFormat($format);
     }
 
     protected function doGet()

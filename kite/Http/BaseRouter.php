@@ -41,10 +41,10 @@ class BaseRouter
 
     /**
      * 取得路由的信息
-     * @return 发起请求的路由信息
+     * @return object $this
      * @throws \Exception
      */
-    public function getRouter()
+    public function router()
     {
         if (isset($_SERVER['REQUEST_URI']) && $_SERVER['REQUEST_URI'] != '/') {
             $path = $this->analyseRouter($_SERVER['PATH_INFO']);
@@ -53,17 +53,17 @@ class BaseRouter
                     $this->router['action'] = $item['action'];
                     $this->router['path'] = $item['path'];
                     $this->router['method'] = $item['method'];
-                    return $this->router;
+                    return $this;
                 }
             }
-            throw new \Exception('请求地址或者方法不存在');
+            throw new \Exception('This url or function is not set',500);
         } else {
             // 使用配置的默认Action
             $this->router['action'] = $this->config['action']['default'];
             $this->router['path'] = $this->config['action']['base'];
             $this->router['method'] = $_SERVER['REQUEST_METHOD'];
         }
-        return $this->router;
+        return $this;
     }
 
     /**
@@ -99,4 +99,10 @@ class BaseRouter
     {
         return $this->params;
     }
+
+    public function getRouter()
+    {
+        return $this->router;
+    }
+
 }

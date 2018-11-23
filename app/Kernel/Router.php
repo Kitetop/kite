@@ -22,7 +22,7 @@ class Router extends BaseRouter
      */
     public function __construct($config)
     {
-        parent::__construct($this->routers(), $config);
+        parent::__construct($this->routers(),$config);
     }
 
     /**
@@ -32,8 +32,8 @@ class Router extends BaseRouter
     {
         $routers = [
             ['path' => '/news', 'action' => 'Index', 'method' => 'GET'],
-            ['path' => '/news/user', 'action' => 'new', 'method' => 'GET'],
-            ['path' => '/news/:id', 'action' => 'new', 'method' => 'GET'],
+            ['path' => '/news/user/:id', 'action' => 'Index', 'method' => 'GET'],
+            ['path' => '/news/:name', 'action' => 'Index', 'method' => 'GET'],
             ['path' => '/news/user/:username/:password', 'action' => 'Index', 'method' => 'GET'],
         ];
         return $routers;
