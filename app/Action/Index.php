@@ -29,6 +29,7 @@ class Index extends Action
     ];
     protected function doGet()
     {
+        //dump($this->getRules);
         $this->validate($this->getRules);
         $this->code(201);
         $this->response($this->params);
