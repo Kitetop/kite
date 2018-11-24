@@ -6,14 +6,14 @@
  */
 
 namespace App\Action;
-use Kite\Action\Action;
+use Kite\Action\AbstractAction;
 
 /**
  * 测试Action类
  * Class index
  * @package App\Action
  */
-class Index extends Action
+class Index extends AbstractAction
 {
     protected $getRules = [
         'name' => [
@@ -29,9 +29,11 @@ class Index extends Action
     ];
     protected function doGet()
     {
-        //dump($this->getRules);
         $this->validate($this->getRules);
+        $service = $this->Service('Index');
+        $service->username = $this->params['username'];
+        $data = $service->run();
+        $this->response('message', $data);
         $this->code(201);
-        $this->response($this->params);
     }
 }

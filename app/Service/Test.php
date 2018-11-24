@@ -8,13 +8,13 @@
 namespace App\Service;
 
 
-use Kite\Service\Service;
+use Kite\Service\AbstractService;
 
-class Test extends Service
+class Test extends AbstractService
 {
     protected function execute()
     {
-        echo 'This is Test execute function';
-        return $this;
+        $message = 'This is Test execute function and username='.$this->username;
+        return $message;
     }
 }

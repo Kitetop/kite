@@ -8,17 +8,15 @@
 namespace App\Service;
 
 
-use Kite\Service\Service;
+use Kite\Service\AbstractService;
 
-class Index extends Service
+class Index extends AbstractService
 {
     protected function execute()
     {
         $service = $this->call('Test',[
-            'username' => 'wyw',
-            'password' => 'Kitetop',
+            'username' => $this->username,
         ]);
-        echo "<br>";
-        echo $service->username.' love '.$service->password;
+        return $service;
     }
 }
