@@ -41,10 +41,9 @@ class RouterPhase implements PhaseInterface
     {
         $router = $cycle->getRouter();
         $actionMessage = $router->router()->getRouter();
-        $path = APP . '/Action/' . $actionMessage['action'] . '.php';
-        if (is_file(str_replace('\\', '/', $path))) {
-            require_once $path;
-            $class = 'App\\Action\\' . $actionMessage['action'];
+        //$path = APP . '/Action/' . $actionMessage['action'] . '.php';
+        $class = 'App\\Action\\' . $actionMessage['action'];
+        if (class_exists($class)) {
             $action = new $class($cycle);
             $action->execute($actionMessage['method']);
         } else {

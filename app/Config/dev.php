@@ -22,13 +22,12 @@ $config['action'] = [
     'format' => 'json', //默认输出格式
     'namespace' => '\\' . __NAMESPACE__ . '\\Action' //action的子命名空间
 ];
-if (PHP_SAPI !='cli')
-{
-    $config['rootUrl']="http://10.0.20.198:8090";
-    $config['realUrl']=$config['rootUrl'].$config['action']['base'];
-    $config['assetUrl']=$config['rootUrl'].'/assets';
-}else{
-    $config['rootUrl']=$config['realUrl']=$config['assetsUrl']='';
+if (PHP_SAPI != 'cli') {
+    $config['rootUrl'] = "http://10.0.20.198:8090";
+    $config['realUrl'] = $config['rootUrl'] . $config['action']['base'];
+    $config['assetUrl'] = $config['rootUrl'] . '/assets';
+} else {
+    $config['rootUrl'] = $config['realUrl'] = $config['assetsUrl'] = '';
 }
 /**
  * 错误日志
@@ -38,5 +37,21 @@ $config['logger'] = [
     'write' => $config['root'] . '/runtime/logs/default_error.log',
     'level' => 7
 ];
-$config['db'] = 'mongodb://127.0.0.1:27017?dbname=news';
+/**
+ * 数据库配置信息
+ */
+#################
+#    MONGODB    #
+#################
+$config['MongoDB'] = 'mongodb://127.0.0.1:27017?dbname=news';
+
+###############
+#    MYSQL    #
+###############
+$config['MySQL'] = [
+    'dsn' => 'mysql:dbname=database;host=127.0.0.1',
+    'user' => 'root',
+    'password' => '',
+];
+
 return $config;

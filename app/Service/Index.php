@@ -9,11 +9,15 @@ namespace App\Service;
 
 
 use Kite\Service\AbstractService;
+use App\Model\Index as ModelIndex;
 
 class Index extends AbstractService
 {
     protected function execute()
     {
+        $model = new ModelIndex('MySQL',['Cphone' => '13']);
+        var_dump($model);
+        exit();
         $service = $this->call('Test',[
             'username' => $this->username,
         ]);

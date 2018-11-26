@@ -17,11 +17,12 @@ abstract class AbstractConsole extends Command
         parent::__construct($name);
     }
 
-    public function getCycle()
-    {
-        return $this->cycle;
-    }
-
+    /**
+     * @param $name
+     * @return mixed
+     * @throws \Exception
+     * 脚本中调用Service
+     */
     public function Service($name)
     {
         $class = 'App\\Service\\'.$name;
@@ -32,6 +33,11 @@ abstract class AbstractConsole extends Command
         }
     }
 
+    /**
+     * @param null $key
+     * @return array|mixed
+     * 获得配置文件的配置信息
+     */
     public function config($key = null)
     {
         $this->config = require APP . '/Config/dev.php';
