@@ -23,17 +23,21 @@ Abstract class AbstractModel
      * @var 查询的结果集
      */
     protected $row;
+    /**
+     * @var 数据库的类型
+     */
+    protected $dataBase = 'MySQL';
 
-    public function __construct($dbType, $query = null)
+    public function __construct($where = null)
     {
-        $this->init($dbType, $query);
+        $this->init($where, $this->dataBase);
     }
 
-    protected function config($dbType)
+    protected function config()
     {
-        if (isset($dbType)) {
+        if (isset($this->dataBase)) {
             $config = require APP . '/Config/dev.php';
-            $this->config = $config[$dbType];
+            $this->config = $config[$this->dataBase];
             return $this->config;
         } else {
             throw new \Exception('DataBase type can not be null', 500);
@@ -43,15 +47,15 @@ Abstract class AbstractModel
     /**
      * @param $dbType
      * @throws \Exception
-     * model 的前置操作，初始化，得到对应的数据库对象
+     * model 的前置操作，初始化，得到对应的数据库对象、设置操作表名
      */
-    protected function init($dbType, $query)
+    protected function init($where)
     {
-        $this->config($dbType);
-        $this->model = $this->connect($dbType, $this->config);
+        $this->config();
         $this->table = $this->table();
-        if (isset($query)) {
-            $this->row = $this->select($query);
+        $this->model = $this->connect($this->config);
+        if (isset($where)) {
+            $this->row = $this->select($where);
         }
     }
 
@@ -61,12 +65,12 @@ Abstract class AbstractModel
      * @throws
      * @return mixed 对应的数据库对象
      */
-    protected function connect($dbType, array $config)
+    protected function connect(array $config)
     {
-        $class = 'Kite\\Model\\' . $dbType . '\\' . $dbType;
+        $class = 'Kite\\Model\\' . $this->dataBase . '\\' . $this->dataBase;
         if (class_exists($class)) {
             $db = new $class($config);
-            $db->connect();
+            $db->connect($this->table);
             return $db;
         } else {
             throw new \Exception('This model is not exit',500);
@@ -92,6 +96,11 @@ Abstract class AbstractModel
         } else {
             return false;
         }
+    }
+
+    public function where($where)
+    {
+        return $this->model->where($where);
     }
     /**
      * @return mixed 操作的表名或者集合名
