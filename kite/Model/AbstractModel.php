@@ -22,7 +22,7 @@ Abstract class AbstractModel
     /**
      * @var 查询的结果集
      */
-    protected $row;
+    protected $rows;
     /**
      * @var 数据库的类型
      */
@@ -31,6 +31,19 @@ Abstract class AbstractModel
     public function __construct($where = null)
     {
         $this->init($where, $this->dataBase);
+    }
+
+    public function __get($name)
+    {
+        if (!isset($this->rows[$name])) {
+            throw new \Exception('this value not exist in your table', 500);
+        }
+        return $this->rows[$name];
+    }
+
+    public function __set($name, $value)
+    {
+        $this->rows[$name] = $value;
     }
 
     protected function config()
@@ -55,7 +68,7 @@ Abstract class AbstractModel
         $this->table = $this->table();
         $this->model = $this->connect($this->config);
         if (isset($where)) {
-            $this->row = $this->select($where);
+            $this->rows = $this->select()->where($where)->execute()->fetch();
         }
     }
 
@@ -73,17 +86,16 @@ Abstract class AbstractModel
             $db->connect($this->table);
             return $db;
         } else {
-            throw new \Exception('This model is not exit',500);
+            throw new \Exception('This model is not exit', 500);
         }
     }
 
     /**
-     * @param array $query 需要查询的位置条件
      * @return mixed 查询到的结果集
      */
-    protected function select(array $query)
+    protected function select()
     {
-        return $this->model->select($query,$this->table);
+        return $this->model->select();
     }
 
     /**
@@ -91,17 +103,13 @@ Abstract class AbstractModel
      */
     public function exist()
     {
-        if(isset($this->row)) {
-            return true;
-        } else {
+        if (!$this->rows) {
             return false;
+        } else {
+            return true;
         }
     }
 
-    public function where($where)
-    {
-        return $this->model->where($where);
-    }
     /**
      * @return mixed 操作的表名或者集合名
      */

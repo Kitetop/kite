@@ -15,10 +15,13 @@ class Index extends AbstractService
 {
     protected function execute()
     {
-        $model = new ModelIndex('MySQL',['Cphone' => '13']);
-        var_dump($model);
-        exit();
-        $service = $this->call('Test',[
+        $model = new ModelIndex([['Mphone', '=', '18852865877'], ['Mname', '=', 'Kitetop']]);
+       if(!$model->exist()) {
+           echo 'not';
+       } else {
+           echo 'hhhhh';
+       }
+        $service = $this->call('Test', [
             'username' => $this->username,
         ]);
         return $service;

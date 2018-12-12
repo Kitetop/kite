@@ -22,6 +22,12 @@ final class MySQL
      * @var 数据库的操作语句
      */
     protected $query = '';
+    /**
+     * @var array 用于记录预处理的语句以及值
+     * where => 构造出来的sql语句块
+     * params => 绑定的值
+     */
+    protected $prepare = [];
 
     public function __construct(array $config)
     {
@@ -29,7 +35,7 @@ final class MySQL
         $this->user = $config['user'];
         $this->password = $config['password'];
     }
-    
+
     public function connect($table)
     {
         try {
@@ -65,7 +71,9 @@ final class MySQL
 
     public function execute()
     {
-
+        $exec = $this->pdo->prepare($this->query);
+        $exec->execute($this->prepare['params']);
+        return $exec;
     }
 
     public function which()
@@ -79,8 +87,8 @@ final class MySQL
     ###############################################
     public function where(array $where)
     {
-        $res = LibPDO::getInstance()->parseWhere($where);
-        $this->query .= $this->query . $res;
+        $this->prepare = LibPDO::getInstance()->parseWhere($where);
+        $this->query = $this->query . ' where ' .  $this->prepare['where'];
         return $this;
     }
 

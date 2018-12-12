@@ -8,7 +8,7 @@
 namespace Kite\Model\MySQL;
 
 
-class LibPDO extends \PDO
+class LibPDO
 {
     private static $instance = [];
 

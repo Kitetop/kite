@@ -16,16 +16,11 @@ use Kite\Action\AbstractAction;
 class Index extends AbstractAction
 {
     protected $getRules = [
-        'name' => [
+        'id' => [
             'desc' => '分页页码',
             'message' => 'id不能为空',
             'rules' => ['required'],
         ],
-        'username' => [
-            'desc' => '用户名',
-            'message' => '用户名不能为空',
-            'rules' => ['required']
-        ]
     ];
     protected function doGet()
     {

@@ -14,6 +14,6 @@ class Index extends AbstractModel
 {
     protected function table()
     {
-        return 'customer';
+        return 'manage';
     }
 }
