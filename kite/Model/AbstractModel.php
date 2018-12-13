@@ -7,6 +7,7 @@
 
 namespace Kite\Model;
 
+use PDO;
 
 Abstract class AbstractModel
 {
@@ -27,6 +28,14 @@ Abstract class AbstractModel
      * @var 数据库的类型
      */
     protected $dataBase = 'MySQL';
+    /**
+     * @var bool 修改字段
+     */
+    protected $update = [];
+    /**
+     * @var string 数据表的主键
+     */
+    protected $primary = 'id';
 
     public function __construct($where = null)
     {
@@ -43,6 +52,10 @@ Abstract class AbstractModel
 
     public function __set($name, $value)
     {
+        if (empty($this->rows)) {
+            throw new \Exception('you have not select any date', 500);
+        }
+        $this->update[$name] = $value;
         $this->rows[$name] = $value;
     }
 
@@ -68,7 +81,7 @@ Abstract class AbstractModel
         $this->table = $this->table();
         $this->model = $this->connect($this->config);
         if (isset($where)) {
-            $this->rows = $this->select()->where($where)->execute()->fetch();
+            $this->rows = $this->select()->where($where)->execute()->fetch(PDO::FETCH_ASSOC);
         }
     }
 
@@ -91,11 +104,29 @@ Abstract class AbstractModel
     }
 
     /**
+     * @param array $array 需要更新的数据
+     */
+    public function import(array $array)
+    {
+        $this->model->import($array);
+        return $this;
+    }
+
+    /**
      * @return mixed 查询到的结果集
      */
-    protected function select()
+    public function select()
     {
         return $this->model->select();
+    }
+
+    public function remove(array $where = [])
+    {
+        if (empty($where)) {
+            $this->model->delete()->where([$this->primary => $this->rows[$this->primary]])->execute();
+        } else {
+            $this->model->delete()->where($where)->execute();
+        };
     }
 
     /**
@@ -108,6 +139,28 @@ Abstract class AbstractModel
         } else {
             return true;
         }
+    }
+
+    /**
+     * @param $value 插入数据库的字段
+     * 表的更新以及插入操作的统一操作
+     */
+    public function save()
+    {
+        if (empty($this->update)) {
+            $this->model->create()->execute();
+        } else {
+            $this->model->update($this->update)->where([$this->primary => $this->rows[$this->primary]])->execute();
+        }
+    }
+
+    /**
+     * @param string $key 主键的名字
+     * 设置主键
+     */
+    public function setPrimary(string $key)
+    {
+        $this->primary = $key;
     }
 
     /**

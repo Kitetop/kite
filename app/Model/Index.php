@@ -12,6 +12,8 @@ use Kite\Model\AbstractModel;
 
 class Index extends AbstractModel
 {
+    protected $primary = 'Mphone';
+
     protected function table()
     {
         return 'manage';

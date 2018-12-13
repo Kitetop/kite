@@ -23,11 +23,9 @@ final class MySQL
      */
     protected $query = '';
     /**
-     * @var array 用于记录预处理的语句以及值
-     * where => 构造出来的sql语句块
-     * params => 绑定的值
+     * @var array 用于防止sql注入后续传入的值
      */
-    protected $prepare = [];
+    protected $bindValues = [];
 
     public function __construct(array $config)
     {
@@ -48,47 +46,63 @@ final class MySQL
 
     public function select()
     {
+        $this->bindValues = [];
         $this->query = 'select * from ' . $this->table;
         return $this;
     }
 
-    public function update()
+    public function update(array $arr)
     {
-        $this->query = 'update ' . $this->table . 'set' . $this->query . ' ';
+        $this->bindValues = [];
+        foreach ($arr as $key => $value) {
+            $update[] = "`{$key}` = ?";
+            $this->bindValues[] = $value;
+        }
+        $this->query = 'update ' . $this->table . ' set ' . implode(',' , $update) ;
         return $this;
     }
 
+    /**
+     * @return $this
+     * 删除指定的数据
+     */
     public function delete()
     {
-        $this->query = 'delete from ' . $this->table . $this->query . ' ';
+        $this->bindValues = [];
+        $this->query = 'delete from ' . $this->table;
         return $this;
     }
 
+    /**
+     * 向表中插入数据
+     */
     public function create()
     {
         $this->query = 'insert into ' . $this->table . $this->query . ' ';
+        return $this;
     }
 
     public function execute()
     {
         $exec = $this->pdo->prepare($this->query);
-        $exec->execute($this->prepare['params']);
+        if (!$exec->execute($this->bindValues)) {
+            throw new \Exception('SQL operation error :' . $exec->errorInfo()[2], 500);
+        }
         return $exec;
-    }
-
-    public function which()
-    {
-
     }
 
     #################################################
     #                  查询构造器                    #
     #                  构造SQL语句                  #
+    #               调用顺序请和mysql保存一致        #
     ###############################################
     public function where(array $where)
     {
-        $this->prepare = LibPDO::getInstance()->parseWhere($where);
-        $this->query = $this->query . ' where ' .  $this->prepare['where'];
+        $where = LibPDO::getInstance()->parseWhere($where);
+        $this->query = $this->query . ' where ' . $where['where'];
+        foreach ($where['params'] as $value) {
+            $this->bindValues[] = $value;
+        }
         return $this;
     }
 
@@ -99,6 +113,33 @@ final class MySQL
 
     public function order(array $order)
     {
+        $order = LibPDO::getInstance()->parseOrder($order);
+        $this->query = $this->query . ' ' . $order;
+        return $this;
+    }
 
+    /**
+     * @param $offset 偏移量
+     * @param $limit  每页的数量
+     * @return $this  当前对象
+     * 数据分页
+     */
+    public function page($offset, $limit)
+    {
+        $this->query = $this->query . ' limit ' . $offset . ',' . $limit;
+        return $this;
+    }
+
+    /**
+     * @param array $array 需要插入的数据
+     */
+    public function import(array $array)
+    {
+        foreach ($array as $key => $value) {
+            $insert_keys[] = "`{$key}`";
+            $insert_values[] = '?';
+            $this->bindValues[] = $value;
+        }
+        $this->query = '(' . implode(',', $insert_keys) . ') values (' . implode(',', $insert_values) . ')';
     }
 }
