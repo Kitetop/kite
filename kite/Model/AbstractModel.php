@@ -115,7 +115,7 @@ Abstract class AbstractModel
     /**
      * @return mixed 查询到的结果集
      */
-    public function select()
+    public function find()
     {
         return $this->model->select();
     }
