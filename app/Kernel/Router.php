@@ -31,7 +31,7 @@ class Router extends BaseRouter
     public function routers()
     {
         $routers = [
-            ['path' => '/news', 'action' => 'Index', 'method' => 'GET'],
+            ['path' => '/news', 'action' => 'Index', 'method' => 'POST'],
             ['path' => '/news/user/:id', 'action' => 'Index', 'method' => 'GET'],
             ['path' => '/news/:name', 'action' => 'Index', 'method' => 'GET'],
             ['path' => '/news/user/:username/:password', 'action' => 'Index', 'method' => 'GET'],

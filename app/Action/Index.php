@@ -31,4 +31,17 @@ class Index extends AbstractAction
         $this->response('message', $data);
         $this->code(201);
     }
+
+    protected $modelFileRules = [
+        'modelFile' => [
+            'rules' => ['required', 'mime:image/jpeg'],
+            'desc' => '模型文件',
+        ]
+    ];
+
+    protected function doPost()
+    {
+        $this->validateUploadFile($this->modelFileRules);
+        var_dump($this->validatedFiles['modelFile']);exit();
+    }
 }

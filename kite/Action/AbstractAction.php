@@ -9,7 +9,8 @@ namespace Kite\Action;
 
 use Kite\Cycle;
 use Kite\Http\Validator;
-use Kite\Service\AbstractService;
+use Kite\Http\ValidatorUploadFile;
+
 
 /**
  * 处理Action的基础类
@@ -23,6 +24,7 @@ abstract class AbstractAction
     protected $request;
     protected $response;
     protected $params = [];
+    protected $validatedFiles = [];
 
     public function __construct(Cycle $cycle)
     {
@@ -86,6 +88,27 @@ abstract class AbstractAction
         } else {
             $this->response->addDataWithKey($key, $val, $hidden);
         }
+    }
+
+    /**
+     * 表单文件的验证
+     *
+     * @param array $rules
+     * @return mixed
+     */
+    protected function validateUploadFile(array $rules)
+    {
+        $data = [];
+        $keys = array_keys($rules);
+
+        foreach ($keys as $key) {
+            $data[$key] = $this->request->file($key);
+        }
+        $validator = new ValidatorUploadFile($rules, $data);
+        if (false === $validator->make()) {
+            throw new \Exception($validator->lastError(), 400);
+        }
+        $this->validatedFiles = $validator->validatedData();
     }
 
     /**

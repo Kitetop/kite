@@ -4,8 +4,7 @@ namespace Kite\Http;
 
 use Finfo;
 use RuntimeException;
-use Kite\Commons\Arr;
-use Mx\Http\Message\UploadFile;
+use Kite\Commons\UploadFile;
 
 /**
  * UploadFile的验证
@@ -47,7 +46,13 @@ class ValidatorUploadFile extends Validator
 
     /**
      * 验证文件mime类型
-     *
+     * doc => mime:application/msword
+     * rar => mime:application/octet-stream
+     * pdf => mime:application/pdf
+     * zip => mime:application/zip
+     * gif => mime:image/gif
+     * jpeg => mime:image/jpeg
+     * jpg => mime:image/jpg
      * @param UploadFile $uploadFile
      * @param string $params
      * @return boolean

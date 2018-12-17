@@ -14,8 +14,8 @@ use Kite\Http\Response;
 
 class Cycle
 {
-    const CONFIG                    = 'config';
-    const LOGGER                    = 'logger';
+    const CONFIG = 'config';
+    const LOGGER = 'logger';
 
     /**
      * 输出内容格式的常量
@@ -23,11 +23,11 @@ class Cycle
     /**
      * ajax的json数据格式输出
      */
-    const FT_JSON                   = 'json';
+    const FT_JSON = 'json';
     /**
      * 二进制格式输出
      */
-    const FT_BINARY                 = 'binary';
+    const FT_BINARY = 'binary';
 
     /**
      * @var array 生命周期中注册的各个变量
