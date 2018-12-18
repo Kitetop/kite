@@ -155,6 +155,16 @@ Abstract class AbstractModel
     }
 
     /**
+     * @param array $where
+     * @return mixed
+     * 查询符合条件的表中的记录的条数
+     */
+    public function count($where = [])
+    {
+        return $this->model->count()->where($where)->execute()->fetch(PDO::FETCH_ASSOC);
+    }
+
+    /**
      * @param string $key 主键的名字
      * 设置主键
      */

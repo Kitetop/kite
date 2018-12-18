@@ -51,6 +51,13 @@ final class MySQL
         return $this;
     }
 
+    public function count()
+    {
+        $this->bindValues = [];
+        $this->query = 'select count(*) as total from ' . $this->table;
+        return $this;
+    }
+
     public function update(array $arr)
     {
         $this->bindValues = [];
