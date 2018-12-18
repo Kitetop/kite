@@ -81,7 +81,7 @@ Abstract class AbstractModel
         $this->table = $this->table();
         $this->model = $this->connect($this->config);
         if (isset($where)) {
-            $this->rows = $this->select()->where($where)->execute()->fetch(PDO::FETCH_ASSOC);
+            $this->rows = $this->find()->where($where)->execute()->fetch(PDO::FETCH_ASSOC);
         }
     }
 
