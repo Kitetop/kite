@@ -58,9 +58,14 @@ class UploadFile extends SplFileInfo
     public function moveTo($path)
     {
         $dir = dirname($path);
-        if (is_dir($dir)) {
+        if (!is_dir($dir)) {
             mkdir($dir, 0755, true);
         }
         return move_uploaded_file($this->info['tmp_name'], $path);
+    }
+
+    public function getExt()
+    {
+        return pathinfo($this->info['name'], PATHINFO_EXTENSION);
     }
 }
