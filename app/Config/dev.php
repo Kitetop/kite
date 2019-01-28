@@ -51,7 +51,7 @@ $config['MongoDB'] = 'mongodb://127.0.0.1:27017?dbname=news';
 $config['MySQL'] = [
     'dsn' => 'mysql:dbname=database;host=127.0.0.1',
     'user' => 'root',
-    'password' => '',
+    'password' => '1234',
 ];
 
 return $config;

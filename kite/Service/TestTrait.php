@@ -18,5 +18,6 @@ trait TestTrait
     public function initEnv()
     {
         App::initApp();
+        echo 'init Env success!';
     }
 }
