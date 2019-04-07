@@ -169,6 +169,14 @@ Abstract class AbstractModel
     }
 
     /**
+     * @return PDO 对象
+     */
+    public function getDao()
+    {
+        return $this->model->getDao();
+    }
+
+    /**
      * @return mixed 操作的表名或者集合名
      */
     abstract protected function table();

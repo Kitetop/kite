@@ -90,6 +90,11 @@ final class MySQL
         return $this;
     }
 
+    /**
+     * @return mixed
+     * @throws \Exception
+     * SQL语句执行
+     */
     public function execute()
     {
         $exec = $this->pdo->prepare($this->query);
@@ -98,6 +103,15 @@ final class MySQL
         }
         $this->bindValues = [];
         return $exec;
+    }
+
+    /**
+     * @return LibPDO
+     * 获得数据库的PDO对象
+     */
+    public function getDao()
+    {
+        return $this->pdo;
     }
 
     #################################################
